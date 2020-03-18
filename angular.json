@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1, 
+  "version": 1,
   "newProjectRoot": "projects",
   "projects": {
     "jaspicar-tax": {
@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "jaspicar-tax"
+    }
+  },
+  "defaultProject": "jaspicar-tax",
+  "cli": {
+    "analytics": "947decf6-b528-4d07-8dd0-76f67097d75e"
+  }
 }
