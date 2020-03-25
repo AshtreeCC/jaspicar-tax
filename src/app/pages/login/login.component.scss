@@ -1,0 +1,11 @@
+:host {
+  flex: 1;
+  height: 100%;
+}
+
+#google {
+  border: 1px solid #95989A;
+  background: #fff  url('/assets/images/google.svg') no-repeat 25px;
+  background-size: 25px;
+  padding: 10px 20px;
+}
