@@ -10,16 +10,34 @@ import { take, map } from 'rxjs/operators';
 })
 export class AuthService {
 
-  constructor(private afAuth: AngularFireAuth) { }
+  authState: firebase.User = null;
+
+  constructor(private afAuth: AngularFireAuth) { 
+    this.afAuth.authState.subscribe(authState => {
+      console.log(authState);
+      this.authState = authState;
+    });
+  }
+
+  get isAuthenticated(): boolean {
+    console.log(this.authState, !!this.authState);
+    return !!this.authState;
+  }
+
+  get currentUserId(): string {
+    return this.authState.uid;
+  }
 
   login(): Promise<auth.UserCredential> {
     return this.afAuth.signInWithPopup(new auth.GoogleAuthProvider());
   }
 
-  logout() {
+  logout(): void {
     this.afAuth.signOut();
   }
 }
+
+// Auth Guard
 
 @Injectable({
   providedIn: 'root'
