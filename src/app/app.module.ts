@@ -11,13 +11,18 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 import { LoginComponent } from './pages/login/login.component';
 import { IncomeComponent } from './pages/income/income.component';
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { MaterialModule } from '@shared/modules/material.module';
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
+import { AddIncomeComponent } from './pages/income/components/add-income/add-income.component';
+import { AddCategoryComponent } from './shared/components/add-category/add-category.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     IncomeComponent,
+    AddIncomeComponent,
+    AddCategoryComponent,
   ],
   imports: [
     BrowserModule,
@@ -27,7 +32,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
-    MatToolbarModule,
+    MaterialModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [
