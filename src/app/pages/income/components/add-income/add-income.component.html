@@ -1,0 +1,72 @@
+<h1 mat-dialog-title>Add Income</h1>
+
+<mat-dialog-content>
+  <form id="income-form" [formGroup]="incomeForm" (submit)="onSubmit()" novalidate>
+    <div fxLayout="column" fxLayoutAlign="start start">
+      <!-- Invoice # -->
+      <mat-form-field fxFlexFill>
+        <input matInput placeholder="Invoice #" formControlName="invoice">
+        <mat-error *ngIf="incomeForm.get('invoice').hasError('required')">
+          An invoice number is required
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Date -->
+      <mat-form-field fxFlexFill>
+        <input matInput [matDatepicker]="picker" placeholder="Pick a date" formControlName="date">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="incomeForm.get('date').hasError('required')">
+          A date is required
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Category -->
+      <mat-form-field fxFlexFill>
+        <mat-select placeholder="Select a category" formControlName="category_id">
+          <mat-option *ngFor="let cat of categories" [value]="cat.$key">{{ cat.title }}</mat-option>
+        </mat-select>
+        <div matSuffix class="-margin-left-10">
+          <mat-icon (click)="openCategoryDialog()">playlist_add</mat-icon>
+        </div>
+      </mat-form-field>
+
+      <!-- Description -->
+      <mat-form-field fxFlexFill>
+        <input matInput placeholder="Description" formControlName="description">
+        <mat-hint *ngIf="incomeForm.get('description').dirty || incomeForm.get('description').touched">
+          A description is recommended
+        </mat-hint>
+      </mat-form-field>
+
+      <!-- VAT -->
+      <div style="width: 130px">
+        <mat-radio-group placeholder="VAT" formControlName="vat"
+          fxLayout="row" fxLayoutAlign="space-between start">
+          <mat-radio-button value="Incl."> Incl. </mat-radio-button>
+          <mat-radio-button value="Excl."> Excl. </mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <!-- Amount -->
+      <mat-form-field fxFlexFill>
+        <span matPrefix>R &nbsp;</span>
+        <input matInput placeholder="0.00" formControlName="amount">
+        <mat-error *ngIf="incomeForm.get('amount').hasError('required')">
+          Enter an amount in Rands
+        </mat-error>
+        <mat-error *ngIf="incomeForm.get('amount').hasError('pattern')">
+          Enter the number only
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<!-- Actions -->
+<mat-dialog-actions fxFlexFill>
+  <div fxFlexFill fxLayout="row" fxLayoutAlign="space-around center" class="-margin-bottom-10">
+    <button type="button" mat-raised-button (click)="onCancel()"> Cancel </button>
+    <button type="submit" mat-raised-button color="primary" form="income-form"> Submit </button>
+  </div>
+</mat-dialog-actions>
