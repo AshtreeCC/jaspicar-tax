@@ -48,9 +48,12 @@ export class AddIncomeComponent implements OnInit {
     event.stopPropagation();
     const dialogRef: MatDialogRef<any> = this.dialog.open(AddCategoryComponent, {
       data: {
-        form: 'income',
+        formType: 'income',
       },
       backdropClass: '-blur',
+      position: {
+        left: '60%',
+      },
     });
   }
 
