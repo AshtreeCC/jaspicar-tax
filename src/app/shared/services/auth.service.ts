@@ -2,27 +2,25 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { auth } from 'firebase/app';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
-import { take, map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { take, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  authState: firebase.User = null;
+  public isAuthenticated$: Subject<boolean> = new Subject<boolean>();
+  private authState: firebase.User;
 
   constructor(private afAuth: AngularFireAuth) { 
     this.afAuth.authState.subscribe(authState => {
+      this.isAuthenticated$.next(!!authState);
       this.authState = authState;
     });
   }
 
-  get isAuthenticated(): boolean {
-    return !!this.authState;
-  }
-
-  get currentUserId(): string {
+  get currentUserId(): any {
     return this.authState.uid;
   }
 
