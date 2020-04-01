@@ -1,13 +1,18 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
 
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { DataService } from '@shared/services/data.service';
-import { takeUntil } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import { DataService } from '@shared/services/data.service';
+
 import { AddIncomeComponent } from './components/add-income/add-income.component';
+import { AddExpenseComponent } from '../expenses/components/add-expense/add-expense.component';
 
 @Component({
   selector: 'app-income',
@@ -45,6 +50,7 @@ export class IncomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private dataService: DataService,
+    private router: Router,
     public snackBar: MatSnackBar,
     public dialog: MatDialog,
   ) { }
@@ -67,6 +73,11 @@ export class IncomeComponent implements OnInit, OnDestroy {
       this.dataSource = data;
       this.loading$.next(false);
     });
+  }
+
+  gotoExpenses() {
+    this.router.navigateByUrl('/expenses');
+    const dialogRef: MatDialogRef<any> = this.dialog.open(AddExpenseComponent);
   }
 
   openAddDialog(): void {
