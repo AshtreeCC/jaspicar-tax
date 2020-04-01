@@ -22,11 +22,11 @@ export class AddCategoryComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.categories$ = this.dataService.getCategories(this.data.form);
+    this.categories$ = this.dataService.getCategories(this.data.formType);
   }
 
   createCategory(): void { 
-    this.dataService.addCategory(this.category, 'income');
+    this.dataService.addCategory(this.category, this.data.formType);
     this.category = '';
   }
 
