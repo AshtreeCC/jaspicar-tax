@@ -1,31 +1,37 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DataService } from '@shared/services/data.service';
+import { Observable } from 'rxjs';
+import { CategoryModel } from '@shared/models/category.model';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-category',
   templateUrl: './add-category.component.html',
-  styleUrls: ['./add-category.component.scss']
+  styleUrls: ['./add-category.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddCategoryComponent implements OnInit {
 
   category: string;
+  categories$: Observable<CategoryModel[]>;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private dataService: DataService,
   ) { }
 
   ngOnInit(): void {
+    this.categories$ = this.dataService.getCategories(this.data.form);
   }
 
   createCategory(): void { 
-    // this.afo.list(this.data.location).push({"title": this.category});
-    // this.category = "";
+    this.dataService.addCategory(this.category, 'income');
+    this.category = '';
   }
 
-  updateCategory(index): void {
-      // let key = this.data.categories[index].$key;
-      // let val = this.data.categories[index].title;
-      // this.afo.list(this.data.location).update(key, {"title": val});
+  updateCategory(category: CategoryModel): void {
+      this.dataService.setCategory(category);
   }
 
 }
