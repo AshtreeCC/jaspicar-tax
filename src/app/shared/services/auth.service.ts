@@ -14,13 +14,11 @@ export class AuthService {
 
   constructor(private afAuth: AngularFireAuth) { 
     this.afAuth.authState.subscribe(authState => {
-      console.log(authState);
       this.authState = authState;
     });
   }
 
   get isAuthenticated(): boolean {
-    console.log(this.authState, !!this.authState);
     return !!this.authState;
   }
 
