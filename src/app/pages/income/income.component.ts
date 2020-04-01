@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
@@ -18,6 +18,9 @@ import { AddIncomeComponent } from './components/add-income/add-income.component
 export class IncomeComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<boolean> = new Subject<boolean>();
+  
+  loading$: Subject<boolean> = new Subject<boolean>();
+  categoryLoading$: Subject<boolean> = new Subject<boolean>();
 
   periodStart: Date;
   periodUntil: Date;
@@ -25,7 +28,7 @@ export class IncomeComponent implements OnInit, OnDestroy {
   incomeData: string;
   incomeCategories: string;
 
-  simpleCats = [];
+  simplifiedCategories = {};
 
   displayedColumns = [
     'invoice', 
@@ -53,22 +56,27 @@ export class IncomeComponent implements OnInit, OnDestroy {
     this.periodUntil.setMonth(this.periodStart.getMonth() + 2);
 
     // Subscribe to database
+    this.getIncomeData();
+  }
+
+  getIncomeData() {
+    this.loading$.next(true);
     this.dataService.getIncome(this.periodStart).pipe(
       takeUntil(this.destroy$),
     ).subscribe(data => {
       this.dataSource = data;
+      this.loading$.next(false);
     });
   }
 
   openAddDialog(): void {
-    let dialogRef: MatDialogRef<any>;
-    dialogRef = this.dialog.open(AddIncomeComponent);
+    const dialogRef: MatDialogRef<any> = this.dialog.open(AddIncomeComponent);
     
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        let snackBarRef = this.snackBar.open('Income added', '', { duration: 6000 });
-      }
-    });
+    // dialogRef.afterClosed().subscribe(result => {
+    //   if (result) {
+        
+    //   }
+    // });
   }
 
   ngOnDestroy(): void {

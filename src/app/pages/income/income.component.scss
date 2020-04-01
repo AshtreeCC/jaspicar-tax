@@ -1,3 +1,17 @@
 table {
   width: 100%;
+  background-color: white;
+
+  .mat-header-cell {
+    color: black;
+  }
+
+  .mat-cell {
+    color: grey;
+  }
+
+  tr.even {
+    background-color: #FAFAFA;
+  }
+  
 }
