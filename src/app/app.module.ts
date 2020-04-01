@@ -15,6 +15,8 @@ import { MaterialModule } from '@shared/modules/material.module';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { AddIncomeComponent } from './pages/income/components/add-income/add-income.component';
 import { AddCategoryComponent } from './shared/components/add-category/add-category.component';
+import { ExpensesComponent } from './pages/expenses/expenses.component';
+import { AddExpenseComponent } from './pages/expenses/components/add-expense/add-expense.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,8 @@ import { AddCategoryComponent } from './shared/components/add-category/add-categ
     IncomeComponent,
     AddIncomeComponent,
     AddCategoryComponent,
+    ExpensesComponent,
+    AddExpenseComponent,
   ],
   imports: [
     BrowserModule,
