@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Add a category</h1>
+
+<div mat-dialog-content fxLayout="column">
+  <mat-form-field appearance="fill" fxFill>
+    <input matInput placeholder="New category" [(ngModel)]="category" (keyup.enter)="createCategory()">
+    <mat-error></mat-error>
+  </mat-form-field>
+
+  <div *ngFor="let cat of (categories$ | async)">
+      <input matInput [(ngModel)]="cat.name" (keyup.enter)="updateCategory(cat)">
+  </div>
+</div>

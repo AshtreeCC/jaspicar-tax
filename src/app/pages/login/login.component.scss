@@ -1,0 +1,15 @@
+:host {
+  flex: 1;
+  height: 100%;
+  background-color: lightgrey;
+}
+
+#google {
+  border: 1px solid grey;
+  background: #fff url(/assets/images/google.svg) no-repeat 20px;
+  background-size: 46px;
+  padding: 20px 30px 20px 80px;
+  border-radius: 5px;
+  font-size: 28px;
+  cursor: pointer;
+}
