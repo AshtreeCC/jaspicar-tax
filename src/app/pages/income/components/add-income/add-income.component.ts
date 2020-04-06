@@ -1,10 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy, Inject, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { FormGroup, FormBuilder, NgForm } from '@angular/forms';
 
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { AddCategoryComponent } from '@shared/components/add-category/add-category.component';
-import { Observable } from 'rxjs';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
+
+import { Subject } from 'rxjs';
+
 import { DataService } from '@shared/services/data.service';
 
 @Component({
@@ -15,57 +16,42 @@ import { DataService } from '@shared/services/data.service';
 })
 export class AddIncomeComponent implements OnInit {
 
-  incomeForm: FormGroup;
-  keepAlive: boolean = false;
+  // @ViewChild('form') form: NgForm;
 
-  categories$: Observable<any[]>;
+  addIncomeForm: FormGroup
+  keepAlive: boolean;
+
+  reset$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private fb: FormBuilder,
     private dataService: DataService,
+    private changeDetectorRef: ChangeDetectorRef,
     public dialog: MatDialog,
     public dialogRef: MatDialogRef<AddIncomeComponent>,
     public snackBar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
 
   ngOnInit(): void {
-    this.incomeForm = this.createAddForm();
-    this.categories$ = this.dataService.getCategories('income');
+    this.addIncomeForm = this.createForm();
   }
 
-  createAddForm(): any {
+  createForm(): any {
     return this.fb.group({
-      invoice     : ['', Validators.required],
-      date        : ['', Validators.required],
-      categoryID  : ['', Validators.required],
-      description : [''],
-      vat         : ['Incl.'],
-      amount      : ['', [Validators.required, Validators.pattern(/^\d+(\.\d)?\d?$/)]]
-    });
-  }
-
-  openCategoryDialog(event: Event): void {
-    event.stopPropagation();
-    const dialogRef: MatDialogRef<any> = this.dialog.open(AddCategoryComponent, {
-      data: {
-        formType: 'income',
-      },
-      backdropClass: '-blur',
-      position: {
-        left: '60%',
-      },
+      incomeForm: [],
     });
   }
 
   onSubmit(form: any): void {
-    let result = true;
-    this.dataService.addIncome(form.value);
+    const incomeForm = form.form.get('incomeForm');
+    let snackBarRef: MatSnackBarRef<any>;
 
-    if (result) {
-      let snackBarRef = this.snackBar.open('Income added', '', { duration: 6000 });
-      form.form.markAsPristine();
-      form.resetForm();
-    }
+    this.dataService.addIncome(incomeForm.value);
+
+    snackBarRef = this.snackBar.open(`Income for Invoice #${incomeForm.value['invoice']} added`, '', { duration: 6000 });
+    this.reset$.next(true);
+    this.changeDetectorRef.markForCheck();
 
     // Close the dialog after successful submit
     if (!this.keepAlive) {
