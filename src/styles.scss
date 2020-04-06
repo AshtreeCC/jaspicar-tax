@@ -13,3 +13,8 @@ button { border-radius: 2px }
   opacity: 0.5 !important;
   filter: blur(4px);
 }
+
+// Fix for Material overriding hidden value
+*[hidden] {
+  visibility: hidden !important;
+}
