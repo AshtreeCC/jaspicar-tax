@@ -2,6 +2,9 @@
   "targets": {
     "jaspicar": {
       "hosting": {
+        "jaspicar": [
+          "jaspicar"
+        ],
         "jaspicar-tax": [
           "jaspicar-tax"
         ]

@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "deploy-beta": "",
+    "deploy-beta": "firebase use jaspicar && ng build --prod && firebase deploy --only hosting:jaspicar",
     "deploy-prod-tax": "firebase use jaspicar && ng build --prod && firebase deploy --only hosting:jaspicar-tax"
   },
   "private": true,

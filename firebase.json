@@ -1,6 +1,21 @@
 {
   "hosting": [
     {
+      "target": "jaspicar",
+      "public": "dist/jaspicar-tax",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
       "target": "jaspicar-tax",
       "public": "dist/jaspicar-tax",
       "ignore": [
