@@ -1,0 +1,8 @@
+<h1 mat-dialog-title> Remove Invoice # {{ data.invoice }}? </h1>
+
+<mat-dialog-content> Are you sure? </mat-dialog-content>
+
+<mat-dialog-actions fxLayoutAlign="end" fxLayoutGap="8px">
+  <button mat-raised-button (click)="onCancel()"> Cancel </button>
+  <button mat-raised-button color="warn" (click)="onConfirm()"> Yes </button>
+</mat-dialog-actions>
