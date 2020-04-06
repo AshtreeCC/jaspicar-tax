@@ -17,6 +17,11 @@ import { AddIncomeComponent } from './pages/income/components/add-income/add-inc
 import { AddCategoryComponent } from './shared/components/add-category/add-category.component';
 import { ExpensesComponent } from './pages/expenses/expenses.component';
 import { AddExpenseComponent } from './pages/expenses/components/add-expense/add-expense.component';
+import { EditIncomeComponent } from './pages/income/components/edit-income/edit-income.component';
+import { IncomeFormComponent } from './pages/income/components/income-form/income-form.component';
+import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
+import { ExpenseFormComponent } from './pages/expenses/components/expense-form/expense-form.component';
+import { EditExpenseComponent } from './pages/expenses/components/edit-expense/edit-expense.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +32,11 @@ import { AddExpenseComponent } from './pages/expenses/components/add-expense/add
     AddCategoryComponent,
     ExpensesComponent,
     AddExpenseComponent,
+    EditIncomeComponent,
+    IncomeFormComponent,
+    ConfirmDialogComponent,
+    ExpenseFormComponent,
+    EditExpenseComponent,
   ],
   imports: [
     BrowserModule,

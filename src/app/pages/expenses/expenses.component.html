@@ -1,8 +1,13 @@
 <mat-toolbar color="accent">
   <mat-toolbar-row fxLayoutAlign="space-between center" fxLayoutGap="10px">
-    <h1> <small> Expenses for period: </small> {{ periodStart | date:'MMM yyyy' }} - {{ periodUntil | date:'MMM yyyy' }} </h1>
+    <h1> <small> Expenses for tax year: </small> </h1>
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link (click)="onChangePeriod('2019-03-01')" [active]="periodStart.getFullYear() === 2019"> 01 MAR 2019 - 29 FEB 2020 </a>
+      <a mat-tab-link (click)="onChangePeriod('2020-03-01')" [active]="periodStart.getFullYear() === 2020"> 01 MAR 2020 - 28 FEB 2021 </a>
+      <a mat-tab-link> <mat-icon>add</mat-icon> </a>
+    </nav>
     <div fxFlex="shrink"></div>
-    <button mat-raised-button color="primary"
+    <button mat-raised-button
       fxFlex="140px" fxLayout="row" fxLayoutAlign="space-between center"
       (click)="gotoIncome()">
       Add Income 
@@ -10,7 +15,7 @@
     </button>
     <button mat-raised-button color="primary"
       fxFlex="140px" fxLayout="row" fxLayoutAlign="space-between center"
-      (click)="openAddDialog()">
+      (click)="openDialog('Add')">
       Add Expense 
       <mat-icon class="-margin-left-10">remove_circle_outline</mat-icon>
     </button>
@@ -26,47 +31,83 @@
 
 <ng-template #dataTableTpl>
   <table mat-table [dataSource]="dataSource" matSort class="-width-100">
+    <ng-container matColumnDef="index">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> # </th>
+      <td mat-cell *matCellDef="let item"> {{ item.index }} </td>
+      <td mat-footer-cell *matFooterCellDef> Total </td>
+    </ng-container>
+
     <ng-container matColumnDef="invoice">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice # </th>
       <td mat-cell *matCellDef="let item"> {{ item.invoice }} </td>
+      <td mat-footer-cell *matFooterCellDef> </td>
     </ng-container>
     
     <ng-container matColumnDef="date">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-      <td mat-cell *matCellDef="let item"> {{ item.date.seconds * 1000 | date:'dd MMM y' }} </td>
+      <td mat-cell *matCellDef="let item"> {{ item.date ? (item.date.seconds * 1000  | date:'dd MMM y') : 'N/A' }} </td>
+      <td mat-footer-cell *matFooterCellDef> </td>
     </ng-container>
     
     <ng-container matColumnDef="category">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Category </th>
       <td mat-cell *matCellDef="let item"> {{ item.category }} </td>
+      <td mat-footer-cell *matFooterCellDef> </td>
     </ng-container>
     
     <ng-container matColumnDef="description">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
       <td mat-cell *matCellDef="let item"> {{ item.description }} </td>
-    </ng-container>
-    
-    <ng-container matColumnDef="vattable">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="center"> VAT </th>
-      <td mat-cell *matCellDef="let item" class="center"> {{ item.vat }} </td>
-    </ng-container>
-    
-    <ng-container matColumnDef="amount">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="number"> Amount </th>
-      <td mat-cell *matCellDef="let item" class="number"> R {{ item.amount }} </td>
+      <td mat-footer-cell *matFooterCellDef> </td>
     </ng-container>
     
     <ng-container matColumnDef="vat">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="number"> VAT </th>
-      <td mat-cell *matCellDef="let item" class="number"> R {{ item.autoVat }} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> VAT </th>
+      <td mat-cell *matCellDef="let item" class="-align-center">
+        {{ item.vat }} 
+        <small [hidden]="item.vat == 'Excl.' || item.vatRate == dataService.vatRate"> at {{ item.vatRate }}% </small>
+      </td>
+      <td mat-footer-cell *matFooterCellDef> </td>
     </ng-container>
     
-    <ng-container matColumnDef="net">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header class="number"> NET </th>
-      <td mat-cell *matCellDef="let item" class="number"> R {{ item.autoNet }} </td>
+    <ng-container matColumnDef="amount">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount </th>
+      <td mat-cell *matCellDef="let item" class="-align-right"> R {{ item.amount | number:'1.2-2' }} </td>
+      <td mat-footer-cell *matFooterCellDef class="-align-right"> R {{ total.amount | number:'1.2-2' }} </td>
     </ng-container>
     
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index" [ngClass]="i % 2 ? 'odd' : 'even'"></tr>
+    <ng-container matColumnDef="autoVat">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> VAT </th>
+      <td mat-cell *matCellDef="let item" class="-align-right"> {{ item.autoVat != '0.00' ? 'R ' + (item.autoVat | number:'1.2-2') : '-' }} </td>
+      <td mat-footer-cell *matFooterCellDef class="-align-right"> R {{ total.vat | number:'1.2-2' }} </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="autoNet">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header><div> NET </div></th>
+      <td mat-cell *matCellDef="let item" class="-align-right"> R {{ item.autoNet | number:'1.2-2' }} </td>
+      <td mat-footer-cell *matFooterCellDef class="-align-right"> R {{ total.net | number:'1.2-2' }} </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="edit">
+      <th mat-header-cell *matHeaderCellDef> </th>
+      <td mat-cell *matCellDef="let item" style="width: 100px">
+        <div class="-margin-left-10" [hidden]="rowHoverIndex != item.index">
+          <button mat-icon-button color="primary" (click)="openDialog('Edit', item)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="openDialog('Confirm', item)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div> 
+      </td>
+      <td mat-footer-cell *matFooterCellDef> </td>
+    </ng-container>
+    
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index"
+      [ngClass]="[i % 2 ? 'odd' : 'even', i == rowHoverIndex - 1 ? 'highlight' : '']"
+      (mouseover)="onHover(i)">
+    </tr>
+    <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
   </table>
 </ng-template>
