@@ -1,0 +1,25 @@
+#header-toolbar {
+
+}
+
+#footer-toolbar {
+  position: fixed;
+  bottom: 0;
+  z-index: 101;
+  &.mat-toolbar-multiple-rows {
+    min-height: 32px;
+  }
+  .mat-toolbar-row {
+    height: 32px;
+  }
+  small {
+    font-size: small;
+  }
+  button {
+    height: 28px;
+    line-height: 28px;
+    font-size: x-small;
+    background-color: #FFEB3B;
+    color: #212121;
+  }
+}

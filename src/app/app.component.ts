@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './shared/services/auth.service';
+import { UpdateService } from '@shared/services/update.service';
 
 @Component({
   selector: 'app-root',
@@ -8,14 +9,21 @@ import { AuthService } from './shared/services/auth.service';
 })
 export class AppComponent implements OnInit {
 
+  version: string;
+
   constructor(
     public authService: AuthService,
+    public updateService: UpdateService,
   ) { }
 
   ngOnInit(): void {
   }
 
-  logout(): void {
+  onLogout(): void {
     this.authService.logout();
+  }
+
+  onUpdate() {
+    this.updateService.activate();
   }
 }

@@ -1,8 +1,16 @@
-<mat-toolbar color="primary">
+<mat-toolbar id="header-toolbar" color="primary">
   <mat-toolbar-row fxLayoutAlign="space-between center">
     <span> JASPICAR Taxes </span>
 
-    <a routerLink="/login" (click)="logout()" [hidden]="!(authService.isAuthenticated$ | async)"><small> Logout </small></a>
+    <a routerLink="/login" (click)="onLogout()" [hidden]="!(authService.isAuthenticated$ | async)"><small> Logout </small></a>
   </mat-toolbar-row>
 </mat-toolbar>
 <router-outlet></router-outlet>
+<mat-toolbar id="footer-toolbar" color="primary">
+  <mat-toolbar-row fxLayoutAlign="end center" fxLayoutGap="20px"> 
+    <small> Version: {{updateService.version}} </small>
+    <ng-container *ngIf="updateService.available$ | async">
+      <button mat-raised-button (click)="onUpdate()"> Update Available <mat-icon class="-margin-left-10">error_outline</mat-icon></button>
+    </ng-container>
+  </mat-toolbar-row>
+</mat-toolbar>
