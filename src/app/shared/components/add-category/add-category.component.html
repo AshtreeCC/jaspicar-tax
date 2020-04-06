@@ -2,11 +2,16 @@
 
 <div mat-dialog-content fxLayout="column">
   <mat-form-field appearance="fill" fxFill>
-    <input matInput placeholder="New category" [(ngModel)]="category" (keyup.enter)="createCategory()">
+    <mat-label> New Category </mat-label>
+    <input #categoryInput matInput (keyup.enter)="createCategory(categoryInput)">
+    <button matSuffix mat-icon-button (click)="createCategory(categoryInput)" color="primary"><mat-icon>add_box</mat-icon></button>
     <mat-error></mat-error>
   </mat-form-field>
 
-  <div *ngFor="let cat of (categories$ | async)">
-      <input matInput [(ngModel)]="cat.name" (keyup.enter)="updateCategory(cat)">
-  </div>
+  <ul>
+      <li *ngFor="let cat of (categories$ | async)" fxFill fxLayout="row" fxLayoutAlign="space-between baseline">
+        <input #catInput matInput [value]="cat.name" (keyup.enter)="updateCategory(catInput, cat)">
+        <button mat-icon-button (click)="updateCategory(catInput, cat)" color="primary" [hidden]="cat.name == catInput.value"><mat-icon>save</mat-icon></button>
+      </li>
+  </ul>
 </div>

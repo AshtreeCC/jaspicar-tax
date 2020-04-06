@@ -1,0 +1,15 @@
+ul {
+  padding-inline-start: 20px;
+  margin-block-start: 0;
+  li {
+    input{
+      margin: 2px 0;
+    }
+    button {
+      margin-right: 16px;
+      height: 24px;
+      line-height: 24px;
+      width: 24px;
+    }
+  }
+}

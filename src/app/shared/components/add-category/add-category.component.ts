@@ -13,7 +13,6 @@ import { map } from 'rxjs/operators';
 })
 export class AddCategoryComponent implements OnInit {
 
-  category: string;
   categories$: Observable<CategoryModel[]>;
 
   constructor(
@@ -25,12 +24,17 @@ export class AddCategoryComponent implements OnInit {
     this.categories$ = this.dataService.getCategories(this.data.formType);
   }
 
-  createCategory(): void { 
-    this.dataService.addCategory(this.category, this.data.formType);
-    this.category = '';
+  createCategory(field: any): void { 
+    this.dataService.addCategory(field.value, this.data.formType);
+    field.value = '';
   }
 
-  updateCategory(category: CategoryModel): void {
+  updateCategory(field: any, category: CategoryModel): void {
+      if (field.value === '') {
+        this.dataService.deleteCategory(category);
+        return;
+      }
+      category.name = field.value;
       this.dataService.setCategory(category);
   }
 
