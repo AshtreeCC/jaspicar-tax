@@ -1,6 +1,19 @@
 #expenses-toolbar {
   position: sticky;
   top: 0;
+
+  .mat-tab-nav-bar,
+  .mat-tab-header {
+    border: none;
+  }
+
+  .vat-row {
+    height: 32px;
+    padding-bottom: 10px;
+    .mat-tab-link {
+      height: 32px;
+    }
+  }
 }
 
 table {
@@ -14,6 +27,10 @@ table {
     top: 64px !important;
   }
 
+  .vat-row .mat-header-cell {
+    top: 96px !important;
+  }
+  
   .mat-footer-cell {
     color: black;
     border-top: 3px double grey;

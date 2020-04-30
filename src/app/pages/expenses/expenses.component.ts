@@ -40,6 +40,11 @@ export class ExpensesComponent implements OnInit, OnDestroy {
 
   periodStart: Date;
   periodUntil: Date;
+  periodFilter: String;
+
+  activeTabTaxCache: string;
+  activeTabVatCache: string;
+  activeTabVatDisplay: boolean;
 
   incomeData: string;
   incomeCategories: string;
@@ -78,23 +83,48 @@ export class ExpensesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Initialise date range
-    this.onChangePeriod('2020-03-01');
+    this.onChangePeriod('2020-03-01', 'tax');
   }
 
-  onChangePeriod(start: string): void {
+  onChangePeriod(start: string, filter: string): void {
+    let wasActive: boolean = false;
     this.periodStart = new Date(start + ' 00:00:00');
     this.periodUntil = new Date(this.periodStart);
-    this.periodUntil.setFullYear(this.periodStart.getFullYear() + 1);
-    this.periodUntil.setDate(this.periodUntil.getDate() - 1);
-
+    switch(filter) {
+      case 'tax': 
+        this.periodUntil.setFullYear(this.periodStart.getFullYear() + 1);
+        wasActive = filter + start === this.activeTabTaxCache;
+        this.activeTabTaxCache = filter + start;
+        if (!this.activeTabVatCache) this.activeTabVatCache = this.activeTabTaxCache;
+        this.activeTabVatDisplay = (wasActive) ? !this.activeTabVatDisplay : this.activeTabVatDisplay;
+        if (this.activeTabVatDisplay) {
+          this.onChangePeriod(start.substr(0, 4) + this.activeTabVatCache.substr(7), 'vat');
+        }
+        break;
+      case 'vat':
+        this.periodUntil.setMonth(this.periodStart.getMonth() + 2);
+        this.activeTabVatCache = filter + start;
+        this.activeTabVatDisplay = true;
+        break;
+    }
+    
+    this.periodFilter = filter;
+    
     // Subscribe to database
     this.destroy$.next(true);
     this.getExpenseData();
   }
 
+  isActive(start: string, filter: string): boolean {
+    switch(filter) {
+      case 'tax': return filter + start === this.activeTabTaxCache;
+      case 'vat': return filter + start === this.activeTabVatCache;
+    }
+  }
+
   getExpenseData() {
     this.loading$.next(true);
-    this.dataService.getExpenses(this.periodStart, this.periodUntil).pipe(
+    this.dataService.getExpenses(this.periodStart, this.periodUntil, this.activeTabVatDisplay).pipe(
       takeUntil(this.destroy$),
       ).pipe(
         tap(data => {

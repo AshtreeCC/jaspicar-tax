@@ -1,23 +1,39 @@
 #income-toolbar {
   position: sticky;
   top: 0;
+
+  .mat-tab-nav-bar,
+  .mat-tab-header {
+    border: none;
+  }
+
+  .vat-row {
+    height: 32px;
+    padding-bottom: 10px;
+    .mat-tab-link {
+      height: 32px;
+    }
+  }
 }
 
 table {
   width: 100%;
   background-color: white;
-  margin-bottom: 32px;
+  margin-bottom: 12px;
 
   .mat-header-cell {
     color: black;
     border-bottom: 1px solid grey;
-    top: 64px !important;
+    top: 52px !important;
+  }
+
+  .vat-row .mat-header-cell {
+    top: 96px !important;
   }
 
   .mat-footer-cell {
     color: black;
     border-top: 3px double grey;
-    bottom: 32px !important;
   }
 
   .mat-cell {
