@@ -2,6 +2,20 @@
 
 }
 
+#sidenav {
+  position: absolute;
+  top: 64px;
+  bottom: 32px;
+  left: 0;
+  right: 0;
+
+  // Modifier
+  .-active {
+    background-color: lightgray;
+    color: black;
+  }
+}
+
 #footer-toolbar {
   position: fixed;
   bottom: 0;
@@ -21,5 +35,20 @@
     font-size: x-small;
     background-color: #FFEB3B;
     color: #212121;
+  }
+}
+
+// Block
+::ng-deep #sidenav {
+  .mat-expansion-panel {
+    .mat-expansion-panel-header {
+      padding: 0px 12px;
+      .mat-expansion-panel-header-title {
+        font-size: 1.3em;
+      }
+    }
+    .mat-expansion-panel-body {
+      padding: 0;
+    }
   }
 }

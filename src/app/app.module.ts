@@ -22,6 +22,9 @@ import { IncomeFormComponent } from './pages/income/components/income-form/incom
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
 import { ExpenseFormComponent } from './pages/expenses/components/expense-form/expense-form.component';
 import { EditExpenseComponent } from './pages/expenses/components/edit-expense/edit-expense.component';
+import { TaxComponent } from './pages/tax/tax.component';
+import { VatComponent } from './pages/vat/vat.component';
+import { ScheduleComponent } from './pages/schedule/schedule.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +40,9 @@ import { EditExpenseComponent } from './pages/expenses/components/edit-expense/e
     ConfirmDialogComponent,
     ExpenseFormComponent,
     EditExpenseComponent,
+    TaxComponent,
+    VatComponent,
+    ScheduleComponent,
   ],
   imports: [
     BrowserModule,
