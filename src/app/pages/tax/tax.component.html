@@ -1,0 +1,12 @@
+<mat-toolbar id="tax-toolbar" *ngIf="(routeService.url$ | async) as url">
+  <mat-toolbar-row color="accent" fxLayoutAlign="end end">
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link routerLink="/tax/{{ url.year }}/income" [class.-active]="url.view == 'income'"> Income </a>
+      <a mat-tab-link routerLink="/tax/{{ url.year }}/expenses" [class.-active]="url.view == 'expenses'"> Expenses </a>
+      <a mat-tab-link routerLink="/tax/{{ url.year }}/schedule" [class.-active]="url.view == 'schedule'"> Schedule </a>
+    </nav>
+    <button id="fab" mat-fab color="primary" (click)="onAdd(url.view)"> <mat-icon>add</mat-icon> </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<router-outlet></router-outlet>

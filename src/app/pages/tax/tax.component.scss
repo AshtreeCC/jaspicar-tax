@@ -1,0 +1,24 @@
+#tax-toolbar {
+  position: sticky;
+  top: -12px;
+  z-index: 102;
+}
+
+#fab {
+  margin-bottom: -26px;
+}
+
+// Modifier
+.-active {
+  background-color: white;
+  color: gray;
+  border-radius: 10px 10px 0 0;
+}
+
+// Fix for Material quirkiness
+.mat-tab-link:not(.mat-tab-disabled) {
+  opacity: 1;
+}
+.mat-tab-nav-bar, .mat-tab-header {
+  border-bottom: none;
+}
