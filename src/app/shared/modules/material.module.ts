@@ -15,6 +15,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatOptionModule, MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [],
@@ -35,6 +39,10 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatNativeDateModule,
     MatButtonModule,
     MatSlideToggleModule,
+    MatTabsModule,
+    MatSidenavModule,
+    MatListModule,
+    MatExpansionModule,
   ],
   exports: [
     MatToolbarModule,
@@ -52,6 +60,10 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatNativeDateModule,
     MatButtonModule,
     MatSlideToggleModule,
+    MatTabsModule,
+    MatSidenavModule,
+    MatListModule,
+    MatExpansionModule,
   ],
 })
 export class MaterialModule { }
