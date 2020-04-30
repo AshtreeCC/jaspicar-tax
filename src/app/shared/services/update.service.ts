@@ -8,7 +8,7 @@ import { Subject, BehaviorSubject } from 'rxjs';
 })
 export class UpdateService {
 
-  version: string = '0.1.6-beta';
+  version: string = '0.1.7';
   available$: Subject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
@@ -19,24 +19,17 @@ export class UpdateService {
       // Notify the user when an update is available
       this.swUpdate.available.subscribe(event => {
         this.available$.next(true);
-        console.log('available', event);
       });
 
       // Reload the app when an update has been activated
       this.swUpdate.activated.subscribe(() => {
         this.available$.next(false);
-        console.log('activated', event);
-        // document.location.reload();
+        document.location.reload();
       });
 
       // Check for updates periodically
       // 10 min * 60 seconds * 1000 milliseconds
-      setInterval(() => {
-        console.log('check')
-        this.swUpdate.checkForUpdate()
-        .then(result => console.log);
-        
-      }, 10000);
+      setInterval(() => this.swUpdate.checkForUpdate(), 600000);
     }
   }
 
