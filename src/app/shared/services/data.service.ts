@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 
 import { AngularFirestore, DocumentData } from '@angular/fire/firestore';
+import { firestore } from 'firebase/app';
 import 'firebase/firestore';
 
-import { Observable, combineLatest } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Observable, combineLatest, of } from 'rxjs';
+import { map, tap, switchMap } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
 
@@ -24,14 +25,60 @@ export class DataService {
     private authService: AuthService,
   ) { }
 
+  // APP
+
+  get years$(): Observable<any> {
+    // First check if we are authenticated
+    return this.authService.isAuthenticated$.pipe(
+      switchMap((authenticated: boolean) => {
+        return (authenticated) ? this._getYears() : of([]);
+      }),
+    )
+  }
+
+  private _getYears(): Observable<string[]> {
+    return this.af.collection('tax')
+      .doc(this.authService.currentUserId)
+      .collection('years')
+      .snapshotChanges()
+      .pipe(
+        map((data: any) => {
+          let years: string[] = [];
+          data.map(res => {
+            years.push(res.payload.doc.id);
+          });
+          years.sort();
+          return years;
+        }),
+        // tap(console.log),
+      );
+  }
+
   // INCOME
 
   // Add
   addIncome(income: IncomeModel) {
-    let form: IncomeModel = new IncomeForm(income);
-    this.af.collection('tax')
-      .doc(this.authService.currentUserId)
-      .collection('income').add({
+    // const storyRef = db.collection('stories').doc('hello-world');
+    // const statsRef = db.collection('stories').doc('--stats--');
+
+
+
+    // const batch = db.batch();
+    // const storyRef = db.collection('stories').doc(`${Math.random()}`);
+    // batch.set(storyRef, { title: 'New Story!' });
+    // batch.set(statsRef, { storyCount: increment }, { merge: true });
+    // batch.commit();
+
+    const form: IncomeModel = new IncomeForm(income);
+    const increment = firestore.FieldValue.increment(1);
+
+    const userDocRef = this.af.collection('tax').doc(this.authService.currentUserId);
+    const taxDocRef = userDocRef.collection('income').doc(this.af.createId()).ref;
+    const yearDocRef = userDocRef.collection('years').doc(form.date.getFullYear().toString()).ref;
+
+    const batch = this.af.firestore.batch();
+    
+    batch.set(taxDocRef, {
         invoice: form.invoice,
         date: form.date,
         categoryID: form.categoryID,
@@ -40,6 +87,10 @@ export class DataService {
         vat: form.vat,
         amount: Number(form.amount),
       } as IncomeModel);
+
+      batch.set(yearDocRef, { count: increment }, { merge: true });
+
+      batch.commit();
   }
 
   // Update
@@ -58,34 +109,45 @@ export class DataService {
   }
 
   // Get
-  getIncome(periodStart: Date, periodUntil: Date): Observable<any> {
+  getIncome(periodStart: Date, periodUntil: Date, vat: boolean = false): Observable<any> {
+    // console.log(periodStart);
+    // console.log(periodUntil);
+    let query: firebase.firestore.Query = this.af.collection('tax')
+      .doc(this.authService.currentUserId)
+      .collection('income').ref
+      .where('date', '>=', periodStart)
+      .where('date', '<', periodUntil)
+      .orderBy('date', 'desc');
+
+    if (vat) {
+      query = query.where('vat', '==', 'Incl.')
+    }
+
     const income$ = this.af.collection('tax')
       .doc(this.authService.currentUserId)
-      .collection('income', ref => ref
-        .where('date', '>=', periodStart)
-        .where('date', '<', periodUntil)
-        .orderBy('date', 'desc')
-    ).snapshotChanges().pipe(
-      map((data: any) => {
-        let index: number = 1;
-        return data.map(res => {
-          return {
-            index: index++,
-            id: res.payload.doc.id,
-            ...res.payload.doc.data(),
-          };
-        });
-      }),
-      map(data => data.map(income => {
-          return {
-            ...income,
-            autoNet: income.autoNet = this.calculateNet(income.vat, income.amount, income.vatRate),
-            autoVat: income.autoVat = this.calculateVat(income.amount, income.autoNet),
-          }
-        })
-      ),
-      // tap(console.log),
-    );
+      .collection('income', ref => query)
+      .snapshotChanges()
+      .pipe(
+        map((data: any) => {
+          let index: number = 1;
+          return data.map(res => {
+            return {
+              index: index++,
+              id: res.payload.doc.id,
+              ...res.payload.doc.data(),
+            };
+          });
+        }),
+        map(data => data.map(income => {
+            return {
+              ...income,
+              autoNet: income.autoNet = this.calculateNet(income.vat, income.amount, income.vatRate),
+              autoVat: income.autoVat = this.calculateVat(income.amount, income.autoNet),
+            }
+          })
+        ),
+        // tap(console.log),
+      );
 
     const categories$ = this.getCategories('income');
 
@@ -145,14 +207,23 @@ export class DataService {
   }
 
   // Get
-  getExpenses(periodStart: Date, periodUntil: Date): Observable<any> {
-    const expenses$ = this.af.collection('tax')
+  getExpenses(periodStart: Date, periodUntil: Date, vat: boolean = false): Observable<any> {
+    let query: firebase.firestore.Query = this.af.collection('tax')
       .doc(this.authService.currentUserId)
-      .collection('expenses', ref => ref
+      .collection('expenses').ref
       .where('date', '>=', periodStart)
       .where('date', '<', periodUntil)
-        .orderBy('date', 'desc')
-      ).snapshotChanges().pipe(
+      .orderBy('date', 'desc');
+
+    if (vat) {
+      query = query.where('vat', '==', 'Incl.')
+    }
+
+    const expenses$ = this.af.collection('tax')
+      .doc(this.authService.currentUserId)
+      .collection('expenses', ref => query)
+      .snapshotChanges()
+      .pipe(
         map((data: any) => {
           let index: number = 1;
           return data.map(res => {

@@ -15,13 +15,14 @@ export class AuthService {
 
   constructor(private afAuth: AngularFireAuth) { 
     this.afAuth.authState.subscribe(authState => {
-      this.isAuthenticated$.next(!!authState);
       this.authState = authState;
+      this.isAuthenticated$.next(!!authState);
     });
   }
 
   get currentUserId(): any {
     return this.authState.uid;
+    // return 'XFcG1TwbXkfZ9xUzckoIicFgsnC2';
   }
 
   login(): Promise<auth.UserCredential> {
