@@ -13,9 +13,9 @@ import { ScheduleComponent } from './pages/schedule/schedule.component';
 const routes: Routes = [
     { path: '', redirectTo: `tax/${(new Date()).getFullYear()}`, pathMatch: 'full' },
     { path: 'tax/:year', component: TaxComponent, canActivate: [AuthGuard], children: [
-      { path: 'income', component: IncomeComponent },
-      { path: 'expenses', component: ExpensesComponent },
-      { path: 'schedule', component: ScheduleComponent },
+      { path: 'income', component: IncomeComponent, data: { reuseRoute: true } },
+      { path: 'expenses', component: ExpensesComponent, data: { reuseRoute: true } },
+      { path: 'schedule', component: ScheduleComponent, data: { reuseRoute: true } },
     ]},
     { path: 'vat/:year', component: VatComponent, canActivate: [AuthGuard] },
     // { path: 'stock', component: StockComponent, canActivate: [AuthGuard] },
