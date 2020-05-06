@@ -131,9 +131,7 @@
       <td mat-footer-cell *matFooterCellDef> </td>
     </ng-container>
     
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"
-      [ngClass]="{'vat-row': activeTabVatDisplay}">
-    </tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index"
       [ngClass]="[i % 2 ? 'odd' : 'even', i == rowHoverIndex - 1 ? 'highlight' : '']"
       (mouseover)="onHover(i)">

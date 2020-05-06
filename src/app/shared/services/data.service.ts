@@ -58,16 +58,6 @@ export class DataService {
 
   // Add
   addIncome(income: IncomeModel) {
-    // const storyRef = db.collection('stories').doc('hello-world');
-    // const statsRef = db.collection('stories').doc('--stats--');
-
-
-
-    // const batch = db.batch();
-    // const storyRef = db.collection('stories').doc(`${Math.random()}`);
-    // batch.set(storyRef, { title: 'New Story!' });
-    // batch.set(statsRef, { storyCount: increment }, { merge: true });
-    // batch.commit();
 
     const form: IncomeModel = new IncomeForm(income);
     const increment = firestore.FieldValue.increment(1);
@@ -178,9 +168,15 @@ export class DataService {
   // Add
   addExpense(expense: ExpenseModel) {
     let form: ExpenseModel = new ExpenseForm(expense);
-    this.af.collection('tax')
-      .doc(this.authService.currentUserId)
-      .collection('expenses').add({
+    const increment = firestore.FieldValue.increment(1);
+
+    const userDocRef = this.af.collection('tax').doc(this.authService.currentUserId);
+    const taxDocRef = userDocRef.collection('expenses').doc(this.af.createId()).ref;
+    const yearDocRef = userDocRef.collection('years').doc(form.date.getFullYear().toString()).ref;
+
+    const batch = this.af.firestore.batch();
+
+    batch.set(taxDocRef, {
         invoice: form.invoice,
         date: form.date,
         categoryID: form.categoryID,
@@ -189,6 +185,10 @@ export class DataService {
         vat: form.vat,
         amount: Number(form.amount),
       } as ExpenseModel);
+
+    batch.set(yearDocRef, { count: increment }, { merge: true });
+
+    batch.commit();
   }
 
   // Update
