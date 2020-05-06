@@ -6,14 +6,10 @@
   .mat-tab-header {
     border: none;
   }
+}
 
-  // .vat-row {
-  //   height: 32px;
-  //   padding-bottom: 10px;
-  //   .mat-tab-link {
-  //     height: 32px;
-  //   }
-  // }
+#loading {
+  height: calc(100% - 64px);
 }
 
 table {
@@ -26,10 +22,6 @@ table {
     border-bottom: 1px solid grey;
     top: 52px !important;
   }
-
-  // .vat-row .mat-header-cell {
-  //   top: 96px !important;
-  // }
 
   .mat-footer-cell {
     color: black;

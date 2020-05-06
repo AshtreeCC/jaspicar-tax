@@ -1,59 +1,6 @@
-<!-- <mat-toolbar id="income-toolbar" color="accent">
-  <mat-toolbar-row fxLayoutAlign="space-between center" fxLayoutGap="10px">
-    <h2> Income tax for year: </h2>
-    <nav mat-tab-nav-bar>
-      <a mat-tab-link (click)="onChangePeriod('2019-03-01', 'tax')" [active]="isActive('2019-03-01', 'tax')">
-        <mat-icon>{{ (isActive('2019-03-01', 'tax') && activeTabVatDisplay) ? 'expand_more' : 'chevron_right' }} </mat-icon>
-        01 MAR 2019 - 29 FEB 2020 
-      </a>
-      <a mat-tab-link (click)="onChangePeriod('2020-03-01', 'tax')" [active]="isActive('2020-03-01', 'tax')">
-        <mat-icon>{{ (isActive('2020-03-01', 'tax') && activeTabVatDisplay) ? 'expand_more' : 'chevron_right' }} </mat-icon>
-        01 MAR 2020 - 28 FEB 2021
-      </a>
-      <a mat-tab-link> <mat-icon>add</mat-icon> </a>
-    </nav>
-    <div fxFlex="shrink"></div>
-    <button mat-raised-button color="primary"
-      fxFlex="140px" fxLayout="row" fxLayoutAlign="space-between center"
-      (click)="openDialog('Add')">
-      Add Income 
-      <mat-icon class="-margin-left-10">add_circle_outline</mat-icon>
-    </button>
-    <button mat-raised-button
-      fxFlex="140px" fxLayout="row" fxLayoutAlign="space-between center"
-      (click)="gotoExpenses()">
-      Add Expense 
-      <mat-icon class="-margin-left-10">remove_circle_outline</mat-icon>
-    </button>
-  </mat-toolbar-row>
-  <mat-toolbar-row class="vat-row" *ngIf="isActive('2019-03-01', 'tax') && activeTabVatDisplay">
-    <h3> VAT </h3>
-    <nav mat-tab-nav-bar>
-      <a mat-tab-link (click)="onChangePeriod('2019-01-01', 'vat')" [active]="isActive('2019-01-01', 'vat')"> JAN | FEB </a>
-      <a mat-tab-link (click)="onChangePeriod('2019-03-01', 'vat')" [active]="isActive('2019-03-01', 'vat')"> MAR | APR </a>
-      <a mat-tab-link (click)="onChangePeriod('2019-05-01', 'vat')" [active]="isActive('2019-05-01', 'vat')"> MAY | JUN </a>
-      <a mat-tab-link (click)="onChangePeriod('2019-07-01', 'vat')" [active]="isActive('2019-07-01', 'vat')"> JUL | AUG </a>
-      <a mat-tab-link (click)="onChangePeriod('2019-09-01', 'vat')" [active]="isActive('2019-09-01', 'vat')"> SEP | OCT </a>
-      <a mat-tab-link (click)="onChangePeriod('2019-11-01', 'vat')" [active]="isActive('2019-11-01', 'vat')"> NOV | DEC </a>
-    </nav>
-  </mat-toolbar-row>
-  <mat-toolbar-row class="vat-row" *ngIf="isActive('2020-03-01', 'tax') && activeTabVatDisplay">
-    <h3> VAT </h3>
-    <nav mat-tab-nav-bar>
-      <a mat-tab-link (click)="onChangePeriod('2020-01-01', 'vat')" [active]="isActive('2020-01-01', 'vat')"> JAN | FEB </a>
-      <a mat-tab-link (click)="onChangePeriod('2020-03-01', 'vat')" [active]="isActive('2020-03-01', 'vat')"> MAR | APR </a>
-      <a mat-tab-link (click)="onChangePeriod('2020-05-01', 'vat')" [active]="isActive('2020-05-01', 'vat')"> MAY | JUN </a>
-      <a mat-tab-link (click)="onChangePeriod('2020-07-01', 'vat')" [active]="isActive('2020-07-01', 'vat')"> JUL | AUG </a>
-      <a mat-tab-link (click)="onChangePeriod('2020-09-01', 'vat')" [active]="isActive('2020-09-01', 'vat')"> SEP | OCT </a>
-      <a mat-tab-link (click)="onChangePeriod('2020-11-01', 'vat')" [active]="isActive('2020-11-01', 'vat')"> NOV | DEC </a>
-    </nav>
-  </mat-toolbar-row>
-</mat-toolbar> -->
-
 <ng-container *ngIf="loading$ | async; else dataTableTpl"> 
-  <div fxLayout="column" fxLayoutAlign="center center" fxFill> 
-    Loading tax figures... 
-    <div fxFlex="240px"></div>
+  <div id="loading" fxLayout="column" fxLayoutAlign="center center"> 
+    <mat-spinner color="primary" diameter="180"></mat-spinner>
   </div>
 </ng-container>
 
