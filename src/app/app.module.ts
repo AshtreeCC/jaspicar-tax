@@ -10,13 +10,14 @@ import { MaterialModule } from '@shared/modules/material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { PDFExportModule } from '@progress/kendo-angular-pdf-export';
+
 import { CustomReuseStrategy } from '@shared/services/route.service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { environment } from '../environments/environment';
-
 
 import { LoginComponent } from './pages/login/login.component';
 import { TaxComponent } from './pages/tax/tax.component';
@@ -64,6 +65,7 @@ import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confi
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
+    PDFExportModule,
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
