@@ -1,1 +1,61 @@
-<p>vat works!</p>
+<kendo-pdf-export #pdf paperSize="A4" margin="2cm">
+  <div fxLayout="row" id="pdf-wrapper">
+    <h1> VAT for period {{}}</h1>
+    <!-- Income -->
+    <table>
+      <thead>
+        <tr>
+          <th> Category </th>
+          <th> Amount </th>
+          <th> VAT </th>
+          <th> Net </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let i of income | keyvalue">
+          <td> {{ i.key }} </td>
+          <td> {{ i.value.amount }} </td>
+          <td> {{ i.value.vat | number:'1.2-2' }} </td>
+          <td> {{ i.value.net | number:'1.2-2' }} </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr *ngIf="incomeTotal as t">
+          <td> Total </td>
+          <td> {{ t.amount }} </td>
+          <td> {{ t.vat | number:'1.2-2' }} </td>
+          <td> {{ t.net | number:'1.2-2' }} </td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <!-- Expenses -->
+    <table>
+      <thead>
+        <tr>
+          <th> Category </th>
+          <th> Amount </th>
+          <th> VAT </th>
+          <th> Net </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let e of expenses | keyvalue">
+          <td> {{ e.key }} </td>
+          <td> {{ e.value.amount }} </td>
+          <td> {{ e.value.vat | number:'1.2-2' }} </td>
+          <td> {{ e.value.net | number:'1.2-2' }} </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr *ngIf="expenseTotal as t">
+          <td> Total </td>
+          <td> {{ t.amount }} </td>
+          <td> {{ t.vat | number:'1.2-2' }} </td>
+          <td> {{ t.net | number:'1.2-2' }} </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</kendo-pdf-export>
+<button mat-raised-button color="primary" (click)="pdf.saveAs('download.pdf')"> Download PDF </button>
