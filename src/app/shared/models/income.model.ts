@@ -2,6 +2,7 @@ export interface IncomeModel {
   id?: string,
   invoice: string,
   date: Date,
+  category?: string,
   categoryID: string,
   description: string,
   vatRate: number,

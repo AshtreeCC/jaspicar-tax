@@ -4,7 +4,7 @@ import { AngularFirestore, DocumentData } from '@angular/fire/firestore';
 import { firestore } from 'firebase/app';
 import 'firebase/firestore';
 
-import { Observable, combineLatest, of } from 'rxjs';
+import { Observable, combineLatest, of, merge } from 'rxjs';
 import { map, tap, switchMap } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
@@ -36,11 +36,9 @@ export class DataService {
     )
   }
 
-  private _getYears(): Observable<string[]> {
-    return this.af.collection('tax')
-      .doc(this.authService.currentUserId)
-      .collection('years')
-      .snapshotChanges()
+  private _getYears(): Observable<any> {
+    const yearsDocRef = this.af.collection('tax').doc(this.authService.currentUserId).collection('years');
+    return yearsDocRef.snapshotChanges()
       .pipe(
         map((data: any) => {
           let years: string[] = [];
@@ -49,6 +47,28 @@ export class DataService {
           });
           years.sort();
           return years;
+        }),
+        switchMap(years => {
+          // let result: any[] = [];
+          const months$: Observable<any>[] = years.map(year => {
+            // result[year] = [];
+            const monthsDocRef = yearsDocRef.doc(year).collection('months');
+            return monthsDocRef.snapshotChanges()
+              .pipe(
+                map(data => {
+                  let months: string[] = [];
+                  data.map(res => {
+                    months.push(res.payload.doc.id);
+                  });
+                  months.sort();
+                  return months;
+                }),
+                map(months => {
+                  return {year, months};
+                }),
+              )
+          });
+          return combineLatest(months$);
         }),
         // tap(console.log),
       );
@@ -64,7 +84,8 @@ export class DataService {
 
     const userDocRef = this.af.collection('tax').doc(this.authService.currentUserId);
     const taxDocRef = userDocRef.collection('income').doc(this.af.createId()).ref;
-    const yearDocRef = userDocRef.collection('years').doc(form.date.getFullYear().toString()).ref;
+    const yearDocRef = userDocRef.collection('years').doc(form.date.getFullYear().toString())
+      .collection('months').doc((form.date.getMonth() + 1).toString()).ref;
 
     const batch = this.af.firestore.batch();
     
@@ -99,9 +120,9 @@ export class DataService {
   }
 
   // Get
-  getIncome(periodStart: Date, periodUntil: Date, vat: boolean = false): Observable<any> {
-    // console.log(periodStart);
-    // console.log(periodUntil);
+  getIncome(periodStart: Date, periodUntil: Date, vatOnly: boolean = false): Observable<any> {
+    console.log(periodStart);
+    console.log(periodUntil);
     let query: firebase.firestore.Query = this.af.collection('tax')
       .doc(this.authService.currentUserId)
       .collection('income').ref
@@ -109,7 +130,7 @@ export class DataService {
       .where('date', '<', periodUntil)
       .orderBy('date', 'desc');
 
-    if (vat) {
+    if (vatOnly) {
       query = query.where('vat', '==', 'Incl.')
     }
 
@@ -172,7 +193,8 @@ export class DataService {
 
     const userDocRef = this.af.collection('tax').doc(this.authService.currentUserId);
     const taxDocRef = userDocRef.collection('expenses').doc(this.af.createId()).ref;
-    const yearDocRef = userDocRef.collection('years').doc(form.date.getFullYear().toString()).ref;
+    const yearDocRef = userDocRef.collection('years').doc(form.date.getFullYear().toString())
+      .collection('months').doc((form.date.getMonth() + 1).toString()).ref;
 
     const batch = this.af.firestore.batch();
 
@@ -207,7 +229,7 @@ export class DataService {
   }
 
   // Get
-  getExpenses(periodStart: Date, periodUntil: Date, vat: boolean = false): Observable<any> {
+  getExpenses(periodStart: Date, periodUntil: Date, vatOnly: boolean = false): Observable<any> {
     let query: firebase.firestore.Query = this.af.collection('tax')
       .doc(this.authService.currentUserId)
       .collection('expenses').ref
@@ -215,7 +237,7 @@ export class DataService {
       .where('date', '<', periodUntil)
       .orderBy('date', 'desc');
 
-    if (vat) {
+    if (vatOnly) {
       query = query.where('vat', '==', 'Incl.')
     }
 
