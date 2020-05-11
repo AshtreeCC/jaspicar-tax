@@ -14,8 +14,8 @@
             <mat-panel-title> Tax Year: </mat-panel-title>
           </mat-expansion-panel-header>
           <mat-nav-list>
-            <ng-container *ngFor="let yyyy of years">
-              <a mat-list-item routerLink="/tax/{{yyyy}}/{{url.view}}" [class.-active]="url.page == 'tax' && url.year == yyyy"> {{ yyyy }} </a>
+            <ng-container *ngFor="let menu of years">
+              <a mat-list-item routerLink="/tax/{{menu.year}}/{{getView(url.view)}}" [class.-active]="url.page == 'tax' && url.year == menu.year"> {{ menu.year }} </a>
             </ng-container>
           </mat-nav-list>
         </mat-expansion-panel>
@@ -23,14 +23,23 @@
           <mat-expansion-panel-header>
             <mat-panel-title> VAT: </mat-panel-title>
           </mat-expansion-panel-header>
-          <mat-nav-list>
-            <ng-container *ngFor="let yyyy of years">
-              <a mat-list-item routerLink="/vat/{{yyyy}}" [class.-active]="url.page == 'vat' && url.year == yyyy"> {{ yyyy }} </a>
-            </ng-container>
-          </mat-nav-list>
+            <mat-accordion>
+              <ng-container *ngFor="let menu of years">
+                <mat-expansion-panel [expanded]="menu.year === url.year">
+                  <mat-expansion-panel-header color="accent"> 
+                    <mat-panel-title> <small> {{ menu.year }} </small> </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <mat-nav-list>
+                    <ng-container *ngFor="let month of menu.months">
+                      <a mat-list-item routerLink="/vat/{{menu.year}}/{{month}}" [class.-active]="url.page == 'vat' && url.year == menu.year && url.view == month"> <small> {{ routeService.getMonthString(month) }} </small> </a>
+                    </ng-container>
+                  </mat-nav-list>
+                </mat-expansion-panel>
+              </ng-container>
+            </mat-accordion>
         </mat-expansion-panel>
       </mat-accordion>
-  </mat-sidenav>
+    </mat-sidenav>
   <mat-sidenav-content>
 
     <router-outlet></router-outlet>

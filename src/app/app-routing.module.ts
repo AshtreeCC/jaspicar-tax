@@ -17,7 +17,7 @@ const routes: Routes = [
       { path: 'expenses', component: ExpensesComponent, data: { reuseRoute: true } },
       { path: 'schedule', component: ScheduleComponent, data: { reuseRoute: true } },
     ]},
-    { path: 'vat/:year', component: VatComponent, canActivate: [AuthGuard] },
+    { path: 'vat/:year/:month', component: VatComponent, canActivate: [AuthGuard] },
     // { path: 'stock', component: StockComponent, canActivate: [AuthGuard] },
     // { path: 'contact', component: ContactComponent },
     { path: 'login', component: LoginComponent },

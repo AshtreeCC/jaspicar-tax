@@ -5,6 +5,7 @@ import { AuthService } from './shared/services/auth.service';
 import { UpdateService } from '@shared/services/update.service';
 import { RouteService, StandardURL } from '@shared/services/route.service';
 import { DataService } from '@shared/services/data.service';
+import { tap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -29,10 +30,25 @@ export class AppComponent implements OnInit  {
   ngOnInit(): void {
     // No unsubscribe necessary
     // App component lives the entire lifespan of the app
-    this.dataService.years$.subscribe(data => {
+    this.dataService.years$.pipe(
+      map(data => {
+        return data.map(res => {
+          return {
+            ...res,
+            months: res.months.filter(i => i % 2)
+          };
+        });
+      }),
+      tap(console.log),
+    ).subscribe(data => {
       this.years = data;
       this.changeDetectorRef.markForCheck();
     })
+  }
+
+  getView(view: string): string {
+    if (isNaN(Number(view))) return view;
+    return 'income';
   }
 
   onLogout(): void {
